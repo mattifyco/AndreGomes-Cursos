@@ -7,5 +7,4 @@ const user=App.requireAuth('student'); if(user){document.getElementById('userLab
 function render(){const rem=App.getReminders();document.getElementById('rows').innerHTML=App.Seed.lives.map(l=>`<tr><td>${l.title}</td><td>${l.date}</td><td><button onclick="toggle('${l.id}')">${rem[user.id+'_'+l.id]?'Lembrete ativo':'Ativar lembrete'}</button></td></tr>`).join('');}
 window.toggle=(id)=>{const rem=App.getReminders(); const key=user.id+'_'+id; rem[key]=!rem[key]; App.setReminders(rem); render();};
 render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>

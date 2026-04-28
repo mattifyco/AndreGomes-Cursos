@@ -33,103 +33,52 @@ const Seed = {
 function read(key, fallback) {
   return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
 }
-
 function write(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
-
-function inSubfolder() {
-  return window.location.pathname.includes("/student/") || window.location.pathname.includes("/admin/");
-}
-
-function rel(pathFromRoot) {
-  return inSubfolder() ? `../${pathFromRoot}` : pathFromRoot;
-}
-
-function goTo(pathFromRoot) {
-  window.location.href = rel(pathFromRoot);
-}
-
 function currentUser() {
   return read(Store.session, null);
 }
-
 function setUser(user) {
   write(Store.session, user);
 }
-
 function logout() {
   localStorage.removeItem(Store.session);
 }
-
 function requireAuth(role) {
   const user = currentUser();
-
   if (!user) {
-    goTo("index.html");
+    window.location.href = "/workspace/AndreGomes-Cursos/index.html";
     return null;
   }
-
   if (role && user.role !== role) {
-    goTo(user.role === "admin" ? "admin/home.html" : "student/home.html");
+    window.location.href = user.role === "admin" ? "/workspace/AndreGomes-Cursos/admin/home.html" : "/workspace/AndreGomes-Cursos/student/home.html";
     return null;
   }
-
   return user;
 }
 
-function getProgress() {
-  return read(Store.progress, {});
-}
-
-function setProgress(v) {
-  write(Store.progress, v);
-}
-
-function getQuestions() {
-  return read(Store.questions, []);
-}
-
-function setQuestions(v) {
-  write(Store.questions, v);
-}
-
-function getReviews() {
-  return read(Store.reviews, []);
-}
-
-function setReviews(v) {
-  write(Store.reviews, v);
-}
-
-function getReminders() {
-  return read(Store.reminders, {});
-}
-
-function setReminders(v) {
-  write(Store.reminders, v);
-}
+function getProgress() { return read(Store.progress, {}); }
+function setProgress(v) { write(Store.progress, v); }
+function getQuestions() { return read(Store.questions, []); }
+function setQuestions(v) { write(Store.questions, v); }
+function getReviews() { return read(Store.reviews, []); }
+function setReviews(v) { write(Store.reviews, v); }
+function getReminders() { return read(Store.reminders, {}); }
+function setReminders(v) { write(Store.reminders, v); }
 
 function calcProgress(userId, course) {
   const p = getProgress()[userId] || {};
-  const lessonIds = course.modules.flatMap((m) => m.lessons.map((_, idx) => `${course.id}_${m.id}_${idx}`));
+  const lessonIds = course.modules.flatMap((m) => m.lessons.map((l, idx) => `${course.id}_${m.id}_${idx}`));
   if (!lessonIds.length) return 0;
   return Math.round(lessonIds.reduce((acc, id) => acc + (p[id] || 0), 0) / lessonIds.length);
 }
 
 function completedModules(userId, course) {
   const p = getProgress()[userId] || {};
-  return course.modules.filter((m) => m.lessons.every((_, idx) => (p[`${course.id}_${m.id}_${idx}`] || 0) >= 90)).length;
+  return course.modules.filter((m) => m.lessons.every((l, idx) => (p[`${course.id}_${m.id}_${idx}`] || 0) >= 90)).length;
 }
 
-
-function injectSignature() {
-  if (document.querySelector('.footer-note')) return;
-  const note = document.createElement('div');
-  note.className = 'footer-note';
-  note.textContent = 'Plataforma André Gomes Academy • Desenvolvedora geral: Matify';
-  document.body.appendChild(note);
-}
 function levelFromProgress(avg) {
   if (avg >= 80) return "Nível 5 - Mestre da Rua";
   if (avg >= 60) return "Nível 4 - Profissional";
@@ -143,8 +92,6 @@ window.App = {
   Seed,
   read,
   write,
-  rel,
-  goTo,
   currentUser,
   setUser,
   logout,
@@ -159,6 +106,5 @@ window.App = {
   setReminders,
   calcProgress,
   completedModules,
-  levelFromProgress,
-  injectSignature
+  levelFromProgress
 };

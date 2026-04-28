@@ -7,5 +7,4 @@ const user=App.requireAuth('student'); if(user){document.getElementById('userLab
 const rank=App.Seed.users.filter(u=>u.role==='student').sort((a,b)=>b.weeklyMinutes-a.weeklyMinutes);
 document.getElementById('rows').innerHTML=rank.map((u,i)=>`<tr><td>${i+1}</td><td>${u.name}${u.id===user.id?' (você)':''}</td><td>${u.weeklyMinutes} min</td></tr>`).join('');
 document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>

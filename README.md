@@ -1,54 +1,37 @@
-# André Gomes Academy — MVP Multi-páginas
+# André Gomes Academy — MVP v2
 
-Agora o projeto está separado em páginas diferentes por função:
+MVP front-end com fluxo de **login**, **página inicial** e painéis separados para **Aluno** e **Admin**.
 
-- **Geral:** login/entrada da plataforma
-- **Aluno:** home, cursos/progresso, dúvidas, antes/depois, ranking, lives
-- **Admin:** home, tabela de cursos, análise de alunos, tabela de dúvidas, avaliações antes/depois, lives
+## Novidades desta versão
 
-## Estrutura
+- Login demo para dois perfis:
+  - Aluno
+  - Admin (André)
+- Página inicial após login (antes de abrir cursos)
+- Painel Aluno:
+  - Cursos comprados x bloqueados
+  - Módulos e aulas
+  - Barra de progresso por curso/aula
+  - Central de dúvidas com resposta automática inicial
+- Painel Admin:
+  - Gestão de cursos (visão geral)
+  - Análise de alunos (resumo de progresso)
+  - Central de dúvidas para responder manualmente
 
-- `index.html`
-- `shared/styles.css`
-- `shared/app.js`
-- `student/*.html`
-- `admin/*.html`
+## Fluxo de uso
 
-## Recursos implementados
+1. Abrir o `index.html`
+2. Escolher **Entrar como Aluno** ou **Entrar como Admin**
+3. Navegar pela página inicial e seções liberadas por perfil
+4. No perfil Aluno, enviar pergunta
+5. No perfil Admin, responder perguntas na central de dúvidas
 
-1. Login por perfil (demo) e roteamento para área correta.
-2. Página inicial separada para aluno e para admin.
-3. Cursos com progresso por aula e barra de porcentagem.
-4. Gamificação:
-   - nível por progresso médio
-   - badges por módulo concluído
-5. Área antes/depois para aluno enviar e admin avaliar.
-6. Ranking semanal por consistência (minutos de estudo/prática).
-7. Agenda de lives/Q&A com lembrete no painel do aluno e visão consolidada no admin.
-8. Dúvidas dos alunos com resposta automática inicial + resposta manual do admin.
+## Observação técnica
 
-## Observação
+Continua sendo um MVP estático para GitHub Pages. Para produção, integrar com backend real:
 
-Continua como MVP estático para GitHub Pages.
-Para produção, integrar autenticação real, upload de mídia e backend (Supabase/Firebase + storage + pagamentos).
+- Auth/Roles: Supabase/Firebase
+- Banco: PostgreSQL (Supabase) ou Firestore
+- Vídeo: Mux/Vimeo/Wistia
+- Pagamento e liberação de curso: Stripe + webhook
 
-
-## Upload no GitHub
-
-Use o guia `DEPLOY_GITHUB.md` para publicar no GitHub Pages sem erro de caminho.
-
-## Créditos
-
-Desenvolvedora geral da plataforma: **Matify**.
-
-
-## Sobre o erro "Arquivos binários não são compatíveis"
-
-Se você tentar editar/enviar `.zip` direto no editor web do GitHub, pode aparecer esse erro.
-Por isso, o projeto agora **não versiona ZIP no repositório**.
-
-Para gerar ZIP localmente quando quiser:
-
-```bash
-zip -r andre-gomes-academy-site.zip index.html README.md DEPLOY_GITHUB.md shared student admin
-```

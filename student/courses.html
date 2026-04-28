@@ -16,5 +16,4 @@ function render(){
 window.inc=(key,pct)=>{const p=App.getProgress(); if(!p[user.id]) p[user.id]={}; p[user.id][key]=Math.min(pct+10,100); App.setProgress(p); render();};
 render();
 document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>
