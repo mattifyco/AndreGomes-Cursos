@@ -7,5 +7,4 @@ const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel
 const c=App.Seed.courses[0]; const students=App.Seed.users.filter(u=>u.role==='student');
 document.getElementById('rows').innerHTML=students.map(s=>{const avg=App.calcProgress(s.id,c);return `<tr><td>${s.name}</td><td>${avg}%</td><td>${App.levelFromProgress(avg)}</td><td>${s.weeklyMinutes}</td></tr>`;}).join('');
 document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>

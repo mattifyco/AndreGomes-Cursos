@@ -7,5 +7,4 @@ const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel
 const rem=App.getReminders();
 document.getElementById('rows').innerHTML=App.Seed.lives.map(l=>{const count=Object.keys(rem).filter(k=>k.endsWith('_'+l.id)&&rem[k]).length;return `<tr><td>${l.title}</td><td>${l.date}</td><td>${count}</td></tr>`;}).join('');
 document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>

@@ -7,5 +7,4 @@ const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel
 function render(){const arr=App.getQuestions(); document.getElementById('rows').innerHTML=arr.map(q=>{const su=App.Seed.users.find(u=>u.id===q.userId);return `<tr><td>${su?su.name:'Aluno'}</td><td>${q.question}</td><td>${q.auto}</td><td>${q.admin||'Pendente'}</td><td><button onclick="reply('${q.id}')">Responder</button></td></tr>`;}).join('')||'<tr><td colspan="5">Sem perguntas.</td></tr>';}
 window.reply=(id)=>{const msg=prompt('Resposta para o aluno:'); if(!msg) return; const arr=App.getQuestions().map(q=>q.id===id?{...q,admin:msg}:q); App.setQuestions(arr); render();};
 render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>

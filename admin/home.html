@@ -1,52 +1,6 @@
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin • Home</title>
-    <link rel="stylesheet" href="../shared/styles.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <p class="brand">Admin • André Gomes Academy</p>
-      <div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div>
-    </header>
-
-    <div class="wrap">
-      <aside class="sidebar">
-        <a class="active" href="home.html">Home</a>
-        <a href="courses.html">Tabela de cursos</a>
-        <a href="students.html">Análise de alunos</a>
-        <a href="questions.html">Tabela de dúvidas</a>
-        <a href="reviews.html">Antes/Depois</a>
-        <a href="lives.html">Agenda de lives</a>
-      </aside>
-
-      <main class="content">
-        <section class="hero" style="--hero-url: url('https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80');">
-          <h1 style="margin:0;">Painel profissional de gestão</h1>
-          <p class="small">Administre cursos, acompanhe alunos e responda dúvidas com organização.</p>
-        </section>
-
-        <section class="card grid">
-          <article class="card"><h3>Cursos</h3><p class="small">Organização por módulos e aulas.</p></article>
-          <article class="card"><h3>Alunos</h3><p class="small">Desempenho, ranking e progresso.</p></article>
-          <article class="card"><h3>Dúvidas</h3><p class="small">Resposta automática + resposta manual.</p></article>
-        </section>
-      </main>
-    </div>
-
-    <script src="../shared/app.js"></script>
-    <script>
-      const user = App.requireAuth("admin");
-      if (user) document.getElementById("userLabel").textContent = user.name;
-
-      document.getElementById("logout").onclick = () => {
-        App.logout();
-        location.href = "../index.html";
-      };
-
-      App.injectSignature();
-    </script>
-  </body>
-</html>
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Admin • Home</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Admin • André Gomes Academy</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap"><aside class="sidebar"><a class="active" href="home.html">Home</a><a href="courses.html">Tabela de cursos</a><a href="students.html">Análise de alunos</a><a href="questions.html">Tabela de dúvidas</a><a href="reviews.html">Antes/Depois</a><a href="lives.html">Agenda de lives</a></aside>
+<main class="content"><section class="card"><h1>Painel Admin</h1><p class="small">Área geral com atalhos para todas funções.</p></section><section class="card grid"><div class="card"><h3>Cursos</h3><p class="small">Gerenciar módulos e aulas</p></div><div class="card"><h3>Alunos</h3><p class="small">Ver desempenho e ranking</p></div><div class="card"><h3>Dúvidas</h3><p class="small">Responder perguntas</p></div></section></main></div>
+<script src="../shared/app.js"></script><script>const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel').textContent=user.name;}document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};</script>
+</body></html>

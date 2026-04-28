@@ -8,5 +8,4 @@ const auto=(text)=>text.toLowerCase().includes('fade')?'Treine transição em 3 
 function render(){const rows=App.getQuestions().filter(x=>x.userId===user.id).map(x=>`<tr><td>${x.question}</td><td>${x.auto}</td><td>${x.admin||'Pendente'}</td></tr>`).join(''); document.getElementById('rows').innerHTML=rows||'<tr><td colspan="3">Sem perguntas.</td></tr>';}
 document.getElementById('send').onclick=()=>{const text=document.getElementById('q').value.trim(); if(!text)return; const q=App.getQuestions(); q.unshift({id:'q'+Date.now(),userId:user.id,question:text,auto:auto(text),admin:''}); App.setQuestions(q); document.getElementById('q').value=''; render();};
 render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>

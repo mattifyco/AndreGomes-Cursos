@@ -9,31 +9,17 @@
   <body>
     <header class="topbar">
       <p class="brand">ANDRÉ GOMES • ACADEMY</p>
-      <small class="small">Versão profissional MVP</small>
+      <small class="small">Portal geral</small>
     </header>
 
-    <main class="content" style="max-width: 920px; margin: 1.2rem auto;">
-      <section class="hero" style="--hero-url: url('https://images.unsplash.com/photo-1622288432450-277d0fef5ed6?auto=format&fit=crop&w=1600&q=80');">
-        <h1 style="margin:0;">Do corre da rua para a régua perfeita.</h1>
-        <p class="small" style="max-width:680px;">
-          Plataforma oficial de cursos do André Gomes com trilhas de estudo, evolução prática e acompanhamento.
-        </p>
-      </section>
-
+    <main class="content" style="max-width:720px;margin:2rem auto;">
       <section class="card">
-        <h2>Escolha seu acesso</h2>
-        <p class="small">Você entra por aqui e vai para sua área correta (Aluno ou Admin).</p>
+        <h1>Entrada da plataforma</h1>
+        <p class="small">Escolha um tipo de acesso para seguir para a área correta.</p>
         <div class="grid">
           <button id="studentBtn">Entrar como Usuário (demo)</button>
           <button id="adminBtn">Entrar como Admin (demo)</button>
         </div>
-      </section>
-
-      <section class="card">
-        <h3>Publicar no GitHub</h3>
-        <p class="small">
-          Para facilitar seu upload/publicação, siga o arquivo <strong>DEPLOY_GITHUB.md</strong> na raiz do projeto.
-        </p>
       </section>
     </main>
 
@@ -41,18 +27,14 @@
     <script>
       const student = App.Seed.users.find((u) => u.role === "student");
       const admin = App.Seed.users.find((u) => u.role === "admin");
-
       document.getElementById("studentBtn").onclick = () => {
         App.setUser(student);
         window.location.href = "student/home.html";
       };
-
       document.getElementById("adminBtn").onclick = () => {
         App.setUser(admin);
         window.location.href = "admin/home.html";
       };
-
-      App.injectSignature();
     </script>
   </body>
 </html>

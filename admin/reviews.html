@@ -7,5 +7,4 @@ const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel
 function render(){const arr=App.getReviews(); document.getElementById('rows').innerHTML=arr.map(r=>{const su=App.Seed.users.find(u=>u.id===r.userId);return `<tr><td>${su?su.name:'Aluno'}</td><td><a href='${r.before}' target='_blank'>link</a></td><td><a href='${r.after}' target='_blank'>link</a></td><td>${r.status}</td><td>${r.feedback||'-'}</td><td><button onclick="fb('${r.id}')">Feedback</button></td></tr>`;}).join('')||'<tr><td colspan="6">Sem envios.</td></tr>';}
 window.fb=(id)=>{const text=prompt('Feedback para o aluno:'); if(!text)return; const arr=App.getReviews().map(r=>r.id===id?{...r,status:'Avaliado',feedback:text}:r); App.setReviews(arr); render();};
 render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-App.injectSignature();
 </script></body></html>
