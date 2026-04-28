@@ -3,38 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>André Gomes Academy • Login</title>
-    <link rel="stylesheet" href="shared/styles.css" />
+    <title>André Gomes Academy</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <p class="brand">ANDRÉ GOMES • ACADEMY</p>
-      <small class="small">Portal geral</small>
+      <div>
+        <p class="brand">ANDRÉ GOMES • ACADEMY</p>
+        <small id="sessionLabel">Sem sessão</small>
+      </div>
+      <div class="row gap">
+        <button id="toggleTheme">Trocar neon</button>
+        <button id="logoutBtn" class="ghost" hidden>Sair</button>
+      </div>
     </header>
 
-    <main class="content" style="max-width:720px;margin:2rem auto;">
+    <main class="container">
+      <section id="loginView" class="card view">
+        <h1>Bem-vindo à quebrada da técnica ✂</h1>
+        <p class="small">
+          Faça login como <strong>Aluno</strong> ou <strong>Admin</strong> para
+          acessar seu painel.
+        </p>
+
+        <div class="grid-2">
+          <button class="login-btn" data-user="aluno">Entrar como Aluno (demo)</button>
+          <button class="login-btn" data-user="admin">Entrar como Admin (demo)</button>
+        </div>
+      </section>
+
+      <section id="homeView" class="card view hidden">
+        <h2>Página inicial</h2>
+        <p class="small">Esse é o ponto de entrada antes do curso.</p>
+        <div id="homeCards" class="grid-2"></div>
+      </section>
+
+      <section id="userCoursesView" class="card view hidden">
+        <h2>Meus cursos</h2>
+        <div id="courses"></div>
+      </section>
+
+      <section id="lessonView" class="card view hidden">
+        <h2>Aula selecionada</h2>
+        <div id="lessonDetail">
+          <p class="small">Selecione uma aula para acompanhar progresso.</p>
+        </div>
+      </section>
+
+      <section id="userQuestionsView" class="card view hidden">
+        <h2>Dúvidas dos alunos</h2>
+        <p class="small">
+          O aluno pergunta e recebe retorno automático inicial. O André responde
+          quando tiver tempo no painel de admin.
+        </p>
+        <div class="row gap">
+          <input id="questionInput" type="text" placeholder="Ex: Como melhorar transição no fade?" />
+          <button id="askBtn">Enviar pergunta</button>
+        </div>
+        <div id="questionList" class="stack"></div>
+      </section>
+
+      <section id="adminCoursesView" class="card view hidden">
+        <h2>Admin • Gestão de cursos</h2>
+        <div id="adminCourses"></div>
+      </section>
+
+      <section id="adminAnalyticsView" class="card view hidden">
+        <h2>Admin • Análise de alunos</h2>
+        <div id="analytics"></div>
+      </section>
+
+      <section id="adminQuestionsView" class="card view hidden">
+        <h2>Admin • Central de dúvidas</h2>
+        <div id="adminQuestions" class="stack"></div>
+      </section>
+    </main>
+
+    <footer>
+      <small>© 2026 André Gomes Academy — MVP com login e painéis</small>
       <section class="card">
-        <h1>Entrada da plataforma</h1>
-        <p class="small">Escolha um tipo de acesso para seguir para a área correta.</p>
-        <div class="grid">
-          <button id="studentBtn">Entrar como Usuário (demo)</button>
-          <button id="adminBtn">Entrar como Admin (demo)</button>
+        <h2>Aula selecionada</h2>
+        <div id="lessonDetail">
+          <p>Selecione uma aula para simular progresso.</p>
         </div>
       </section>
     </main>
 
-    <script src="shared/app.js"></script>
-    <script>
-      const student = App.Seed.users.find((u) => u.role === "student");
-      const admin = App.Seed.users.find((u) => u.role === "admin");
-      document.getElementById("studentBtn").onclick = () => {
-        App.setUser(student);
-        window.location.href = "student/home.html";
-      };
-      document.getElementById("adminBtn").onclick = () => {
-        App.setUser(admin);
-        window.location.href = "admin/home.html";
-      };
-    </script>
+    <footer>
+      <small>© 2026 André Gomes Academy — MVP GitHub Pages</small>
+    </footer>
+
+    <script src="script.js"></script>
   </body>
 </html>
