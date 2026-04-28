@@ -6,4 +6,4 @@
 const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel').textContent=user.name;}
 document.getElementById('rows').innerHTML=App.Seed.courses.map(c=>`<tr><td>${c.title}</td><td>${c.modules.length}</td><td>${c.modules.reduce((a,m)=>a+m.lessons.length,0)}</td><td>${c.students.length}</td></tr>`).join('');
 document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-</script></body></html>
+</script></body></html
