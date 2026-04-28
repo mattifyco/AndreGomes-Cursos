@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Admin • Alunos</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Admin • Análise de alunos</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap"><aside class="sidebar"><a href="home.html">Home</a><a href="courses.html">Tabela de cursos</a><a class="active" href="students.html">Análise de alunos</a><a href="questions.html">Tabela de dúvidas</a><a href="reviews.html">Antes/Depois</a><a href="lives.html">Agenda de lives</a></aside>
+<main class="content"><section class="card"><h1>Tabela de desempenho</h1><table><thead><tr><th>Aluno</th><th>Progresso médio</th><th>Nível</th><th>Minutos semanais</th></tr></thead><tbody id="rows"></tbody></table></section></main></div>
+<script src="../shared/app.js"></script><script>
+const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel').textContent=user.name;}
+const c=App.Seed.courses[0]; const students=App.Seed.users.filter(u=>u.role==='student');
+document.getElementById('rows').innerHTML=students.map(s=>{const avg=App.calcProgress(s.id,c);return `<tr><td>${s.name}</td><td>${avg}%</td><td>${App.levelFromProgress(avg)}</td><td>${s.weeklyMinutes}</td></tr>`;}).join('');
+document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
+App.injectSignature();
+</script></body></html>

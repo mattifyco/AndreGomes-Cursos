@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Aluno • Antes/Depois</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Aluno • Antes/Depois</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap"><aside class="sidebar"><a href="home.html">Home</a><a href="courses.html">Cursos & Progresso</a><a href="questions.html">Dúvidas</a><a class="active" href="before-after.html">Antes/Depois</a><a href="ranking.html">Ranking semanal</a><a href="lives.html">Agenda de lives</a></aside>
+<main class="content"><section class="card"><h1>Enviar corte para avaliação</h1><div class="row"><input id="before" placeholder="URL foto antes"/><input id="after" placeholder="URL foto depois"/><button id="save">Enviar</button></div></section><section class="card"><table><thead><tr><th>Antes</th><th>Depois</th><th>Status</th><th>Feedback</th></tr></thead><tbody id="rows"></tbody></table></section></main></div>
+<script src="../shared/app.js"></script><script>
+const user=App.requireAuth('student'); if(user){document.getElementById('userLabel').textContent=user.name;}
+function render(){const rows=App.getReviews().filter(r=>r.userId===user.id).map(r=>`<tr><td><a href='${r.before}' target='_blank'>link</a></td><td><a href='${r.after}' target='_blank'>link</a></td><td>${r.status}</td><td>${r.feedback||'Aguardando avaliação'}</td></tr>`).join(''); document.getElementById('rows').innerHTML=rows||'<tr><td colspan="4">Nenhum envio.</td></tr>';}
+document.getElementById('save').onclick=()=>{const before=document.getElementById('before').value.trim();const after=document.getElementById('after').value.trim(); if(!before||!after)return; const arr=App.getReviews(); arr.unshift({id:'r'+Date.now(),userId:user.id,before,after,status:'Pendente',feedback:''}); App.setReviews(arr); render();};
+render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
+App.injectSignature();
+</script></body></html>

@@ -1,0 +1,20 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Aluno • Cursos</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Aluno • Cursos</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap"><aside class="sidebar"><a href="home.html">Home</a><a class="active" href="courses.html">Cursos & Progresso</a><a href="questions.html">Dúvidas</a><a href="before-after.html">Antes/Depois</a><a href="ranking.html">Ranking semanal</a><a href="lives.html">Agenda de lives</a></aside>
+<main class="content"><section class="card"><h1>Seus cursos</h1><div id="courses"></div></section></main></div>
+<script src="../shared/app.js"></script><script>
+const user=App.requireAuth('student'); if(user){document.getElementById('userLabel').textContent=user.name;}
+function render(){
+  const progress=App.getProgress();
+  const c=App.Seed.courses[0];
+  const purchased=c.students.includes(user.id);
+  if(!purchased){document.getElementById('courses').innerHTML='<p>Você ainda não comprou cursos.</p>';return;}
+  let html=`<h3>${c.title}</h3><p class='small'>Progresso geral: ${App.calcProgress(user.id,c)}%</p><div class='progress'><span style='width:${App.calcProgress(user.id,c)}%'></span></div>`;
+  c.modules.forEach(m=>{html+=`<h4>${m.title}</h4>`; m.lessons.forEach((lesson,i)=>{const key=`${c.id}_${m.id}_${i}`; const pct=progress[user.id]?.[key]||0; html+=`<div class='card'><strong>${lesson}</strong><p class='small'>${pct}%</p><div class='progress'><span style='width:${pct}%'></span></div><button onclick="inc('${key}',${pct})">+10%</button></div>`;});});
+  document.getElementById('courses').innerHTML=html;
+}
+window.inc=(key,pct)=>{const p=App.getProgress(); if(!p[user.id]) p[user.id]={}; p[user.id][key]=Math.min(pct+10,100); App.setProgress(p); render();};
+render();
+document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
+App.injectSignature();
+</script></body></html>
