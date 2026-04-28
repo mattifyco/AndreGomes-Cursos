@@ -4,7 +4,7 @@
 <main class="content"><section class="card"><h1>Tabela de desempenho</h1><table><thead><tr><th>Aluno</th><th>Progresso médio</th><th>Nível</th><th>Minutos semanais</th></tr></thead><tbody id="rows"></tbody></table></section></main></div>
 <script src="../shared/app.js"></script><script>
 const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel').textContent=user.name;}
-const c=App.Seed.courses[0]; const students=App.Seed.users.filter(u=>u.role==='student');
+const c=App.getCourses()[0]; const students=App.Seed.users.filter(u=>u.role==='student');
 document.getElementById('rows').innerHTML=students.map(s=>{const avg=App.calcProgress(s.id,c);return `<tr><td>${s.name}</td><td>${avg}%</td><td>${App.levelFromProgress(avg)}</td><td>${s.weeklyMinutes}</td></tr>`;}).join('');
 document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
 </script></body></html>
