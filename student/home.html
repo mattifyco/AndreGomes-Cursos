@@ -12,7 +12,7 @@
 <script src="../shared/app.js"></script><script>
 const user=App.requireAuth('student'); if(!user){} else {
  document.getElementById('userLabel').textContent=user.name;
- const c=App.Seed.courses[0];
+ const c=App.getCourses()[0];
  const avg=App.calcProgress(user.id,c);
  const mods=App.completedModules(user.id,c);
  const badges=[]; if(mods>=1) badges.push('Badge: Módulo Base'); if(mods>=2) badges.push('Badge: Fade Completo'); if(avg>=80) badges.push('Badge: Constância de Elite');

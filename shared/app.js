@@ -3,7 +3,8 @@ const Store = {
   progress: "ag_progress",
   questions: "ag_questions",
   reviews: "ag_reviews",
-  reminders: "ag_reminders"
+  reminders: "ag_reminders",
+  courses: "ag_courses"
 };
 
 const Seed = {
@@ -19,8 +20,24 @@ const Seed = {
       title: "Fade Underground",
       students: ["u1", "u2"],
       modules: [
-        { id: "m1", title: "Base", lessons: ["Higiene", "Guias", "Marcação"] },
-        { id: "m2", title: "Avançado", lessons: ["Transição", "Detalhes", "Finalização"] }
+        {
+          id: "m1",
+          title: "Base",
+          lessons: [
+            { id: "l1", title: "Higiene", type: "text", text: "Materiais, esterilização e rotina de bancada." },
+            { id: "l2", title: "Guias", type: "text", text: "Como definir as guias conforme o formato da cabeça." },
+            { id: "l3", title: "Marcação", type: "video", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }
+          ]
+        },
+        {
+          id: "m2",
+          title: "Avançado",
+          lessons: [
+            { id: "l4", title: "Transição", type: "text", text: "Combinação de alavanca e movimento em C para suavizar linhas." },
+            { id: "l5", title: "Detalhes", type: "video", videoUrl: "https://www.youtube.com/watch?v=aqz-KE-bpKQ" },
+            { id: "l6", title: "Finalização", type: "text", text: "Checklist final para acabamento profissional." }
+          ]
+        }
       ]
     }
   ],
@@ -52,31 +69,78 @@ function requireAuth(role) {
     return null;
   }
   if (role && user.role !== role) {
-    window.location.href = user.role === "admin" ? "/workspace/AndreGomes-Cursos/admin/home.html" : "/workspace/AndreGomes-Cursos/student/home.html";
+    window.location.href =
+      user.role === "admin"
+        ? "/workspace/AndreGomes-Cursos/admin/home.html"
+        : "/workspace/AndreGomes-Cursos/student/home.html";
     return null;
   }
   return user;
 }
 
-function getProgress() { return read(Store.progress, {}); }
-function setProgress(v) { write(Store.progress, v); }
-function getQuestions() { return read(Store.questions, []); }
-function setQuestions(v) { write(Store.questions, v); }
-function getReviews() { return read(Store.reviews, []); }
-function setReviews(v) { write(Store.reviews, v); }
-function getReminders() { return read(Store.reminders, {}); }
-function setReminders(v) { write(Store.reminders, v); }
+function normalizeLesson(lesson, idx) {
+  if (typeof lesson === "string") {
+    return { id: `legacy_${idx}`, title: lesson, type: "text", text: "" };
+  }
+  return {
+    id: lesson.id || `legacy_${idx}`,
+    title: lesson.title || `Aula ${idx + 1}`,
+    type: lesson.type || "text",
+    text: lesson.text || "",
+    videoUrl: lesson.videoUrl || ""
+  };
+}
+
+function getCourses() {
+  const raw = read(Store.courses, Seed.courses);
+  return raw.map((course) => ({
+    ...course,
+    modules: (course.modules || []).map((module) => ({
+      ...module,
+      lessons: (module.lessons || []).map((lesson, idx) => normalizeLesson(lesson, idx))
+    }))
+  }));
+}
+
+function setCourses(v) {
+  write(Store.courses, v);
+}
+
+function getProgress() {
+  return read(Store.progress, {});
+}
+function setProgress(v) {
+  write(Store.progress, v);
+}
+function getQuestions() {
+  return read(Store.questions, []);
+}
+function setQuestions(v) {
+  write(Store.questions, v);
+}
+function getReviews() {
+  return read(Store.reviews, []);
+}
+function setReviews(v) {
+  write(Store.reviews, v);
+}
+function getReminders() {
+  return read(Store.reminders, {});
+}
+function setReminders(v) {
+  write(Store.reminders, v);
+}
 
 function calcProgress(userId, course) {
   const p = getProgress()[userId] || {};
-  const lessonIds = course.modules.flatMap((m) => m.lessons.map((l, idx) => `${course.id}_${m.id}_${idx}`));
+  const lessonIds = course.modules.flatMap((m) => m.lessons.map((_, idx) => `${course.id}_${m.id}_${idx}`));
   if (!lessonIds.length) return 0;
   return Math.round(lessonIds.reduce((acc, id) => acc + (p[id] || 0), 0) / lessonIds.length);
 }
 
 function completedModules(userId, course) {
   const p = getProgress()[userId] || {};
-  return course.modules.filter((m) => m.lessons.every((l, idx) => (p[`${course.id}_${m.id}_${idx}`] || 0) >= 90)).length;
+  return course.modules.filter((m) => m.lessons.every((_, idx) => (p[`${course.id}_${m.id}_${idx}`] || 0) >= 90)).length;
 }
 
 function levelFromProgress(avg) {
@@ -96,6 +160,8 @@ window.App = {
   setUser,
   logout,
   requireAuth,
+  getCourses,
+  setCourses,
   getProgress,
   setProgress,
   getQuestions,
