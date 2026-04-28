@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Aluno • Dúvidas</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Aluno • Dúvidas</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap"><aside class="sidebar"><a href="home.html">Home</a><a href="courses.html">Cursos & Progresso</a><a class="active" href="questions.html">Dúvidas</a><a href="before-after.html">Antes/Depois</a><a href="ranking.html">Ranking semanal</a><a href="lives.html">Agenda de lives</a></aside>
+<main class="content"><section class="card"><h1>Faça sua pergunta</h1><div class="row"><input id="q" placeholder="Ex: Como melhorar o acabamento?"/><button id="send">Enviar</button></div></section><section class="card"><table><thead><tr><th>Pergunta</th><th>Resposta automática</th><th>Resposta do André</th></tr></thead><tbody id="rows"></tbody></table></section></main></div>
+<script src="../shared/app.js"></script><script>
+const user=App.requireAuth('student'); if(user){document.getElementById('userLabel').textContent=user.name;}
+const auto=(text)=>text.toLowerCase().includes('fade')?'Treine transição em 3 zonas e use alavanca gradual.':'Recebi sua dúvida! André responde assim que possível.';
+function render(){const rows=App.getQuestions().filter(x=>x.userId===user.id).map(x=>`<tr><td>${x.question}</td><td>${x.auto}</td><td>${x.admin||'Pendente'}</td></tr>`).join(''); document.getElementById('rows').innerHTML=rows||'<tr><td colspan="3">Sem perguntas.</td></tr>';}
+document.getElementById('send').onclick=()=>{const text=document.getElementById('q').value.trim(); if(!text)return; const q=App.getQuestions(); q.unshift({id:'q'+Date.now(),userId:user.id,question:text,auto:auto(text),admin:''}); App.setQuestions(q); document.getElementById('q').value=''; render();};
+render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
+</script></body></html>

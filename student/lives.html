@@ -1,0 +1,10 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Aluno • Lives</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Aluno • Agenda de lives</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap"><aside class="sidebar"><a href="home.html">Home</a><a href="courses.html">Cursos & Progresso</a><a href="questions.html">Dúvidas</a><a href="before-after.html">Antes/Depois</a><a href="ranking.html">Ranking semanal</a><a class="active" href="lives.html">Agenda de lives</a></aside>
+<main class="content"><section class="card"><h1>Próximas lives</h1><table><thead><tr><th>Live</th><th>Data</th><th>Lembrete</th></tr></thead><tbody id="rows"></tbody></table></section></main></div>
+<script src="../shared/app.js"></script><script>
+const user=App.requireAuth('student'); if(user){document.getElementById('userLabel').textContent=user.name;}
+function render(){const rem=App.getReminders();document.getElementById('rows').innerHTML=App.Seed.lives.map(l=>`<tr><td>${l.title}</td><td>${l.date}</td><td><button onclick="toggle('${l.id}')">${rem[user.id+'_'+l.id]?'Lembrete ativo':'Ativar lembrete'}</button></td></tr>`).join('');}
+window.toggle=(id)=>{const rem=App.getReminders(); const key=user.id+'_'+id; rem[key]=!rem[key]; App.setReminders(rem); render();};
+render(); document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
+</script></body></html>

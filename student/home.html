@@ -1,0 +1,22 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Aluno • Home</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
+<header class="topbar"><p class="brand">Aluno • André Gomes Academy</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
+<div class="wrap">
+  <aside class="sidebar">
+    <a class="active" href="home.html">Home</a><a href="courses.html">Cursos & Progresso</a><a href="questions.html">Dúvidas</a><a href="before-after.html">Antes/Depois</a><a href="ranking.html">Ranking semanal</a><a href="lives.html">Agenda de lives</a>
+  </aside>
+  <main class="content">
+    <section class="card"><h1>Painel inicial do aluno</h1><p class="small">Entrada antes de começar as aulas.</p></section>
+    <section class="card" id="gamification"></section>
+  </main>
+</div>
+<script src="../shared/app.js"></script><script>
+const user=App.requireAuth('student'); if(!user){} else {
+ document.getElementById('userLabel').textContent=user.name;
+ const c=App.Seed.courses[0];
+ const avg=App.calcProgress(user.id,c);
+ const mods=App.completedModules(user.id,c);
+ const badges=[]; if(mods>=1) badges.push('Badge: Módulo Base'); if(mods>=2) badges.push('Badge: Fade Completo'); if(avg>=80) badges.push('Badge: Constância de Elite');
+ document.getElementById('gamification').innerHTML=`<h2>Gamificação</h2><p>Nível atual: <strong>${App.levelFromProgress(avg)}</strong></p><p class='small'>Módulos concluídos: ${mods}/${c.modules.length}</p><p class='small'>${badges.length?badges.join(' • '):'Sem badges ainda.'}</p>`;
+}
+document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
+</script></body></html>
