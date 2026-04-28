@@ -8,6 +8,7 @@ const users = {
   aluno: { id: "u1", name: "Aluno Demo", role: "student" },
   admin: { id: "a1", name: "André Gomes", role: "admin" }
 };
+const storeKey = "andre-academy-progress";
 
 const data = {
   courses: [
@@ -15,6 +16,7 @@ const data = {
       id: "corte-fade-pro",
       title: "Curso Fade Underground",
       purchasedBy: ["u1"],
+      purchased: true,
       modules: [
         {
           id: "m1",
@@ -38,6 +40,7 @@ const data = {
       id: "colorimetria",
       title: "Colorimetria para Barbeiros",
       purchasedBy: [],
+      purchased: false,
       modules: []
     }
   ]
@@ -165,6 +168,34 @@ function renderStudentCourses() {
     wrapper.innerHTML = `
       <h3>${course.title}</h3>
       <p class="small">${purchased ? "Acesso liberado" : "Bloqueado (não comprado)"}</p>
+const progress = JSON.parse(localStorage.getItem(storeKey) || "{}");
+
+const coursesEl = document.getElementById("courses");
+const lessonDetailEl = document.getElementById("lessonDetail");
+const themeBtn = document.getElementById("toggleTheme");
+
+function lessonPct(id) {
+  return progress[id] || 0;
+}
+
+function calcCourseProgress(course) {
+  const ids = course.modules.flatMap((m) => m.lessons.map((l) => l.id));
+  if (!ids.length) return 0;
+  const total = ids.reduce((acc, id) => acc + lessonPct(id), 0);
+  return Math.round(total / ids.length);
+}
+
+function render() {
+  coursesEl.innerHTML = "";
+
+  data.courses.forEach((course) => {
+    const wrapper = document.createElement("article");
+    wrapper.className = "course";
+
+    const pct = course.purchased ? calcCourseProgress(course) : 0;
+    wrapper.innerHTML = `
+      <h3>${course.title}</h3>
+      <p class="small">${course.purchased ? "Acesso liberado" : "Bloqueado (não comprado)"}</p>
       <div class="progress"><span style="width:${pct}%"></span></div>
       <p class="small">Progresso: ${pct}%</p>
     `;
@@ -342,6 +373,31 @@ els.logoutBtn.addEventListener("click", () => {
 
 let neonAlt = false;
 els.toggleTheme.addEventListener("click", () => {
+    coursesEl.appendChild(wrapper);
+  });
+}
+
+function openLesson(course, module, lesson) {
+  const pct = lessonPct(lesson.id);
+
+  lessonDetailEl.innerHTML = `
+    <h3>${lesson.title}</h3>
+    <p class="small">Curso: ${course.title} • Módulo: ${module.title}</p>
+    <div class="progress"><span style="width:${pct}%"></span></div>
+    <p class="small">Assistido: <strong>${pct}%</strong></p>
+    <button id="watchMore">+10% assistido</button>
+  `;
+
+  document.getElementById("watchMore").addEventListener("click", () => {
+    progress[lesson.id] = Math.min((progress[lesson.id] || 0) + 10, 100);
+    localStorage.setItem(storeKey, JSON.stringify(progress));
+    openLesson(course, module, lesson);
+    render();
+  });
+}
+
+let neonAlt = false;
+themeBtn.addEventListener("click", () => {
   neonAlt = !neonAlt;
   document.documentElement.style.setProperty("--neon", neonAlt ? "#ff00c8" : "#39ff14");
   document.documentElement.style.setProperty("--neon-alt", neonAlt ? "#ff9f1c" : "#00d9ff");
