@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>André Gomes Academy • Login</title>
+    <link rel="stylesheet" href="shared/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <p class="brand">ANDRÉ GOMES • ACADEMY</p>
+      <small class="small">Portal geral</small>
+    </header>
+
+    <main class="content" style="max-width:720px;margin:2rem auto;">
+      <section class="card">
+        <h1>Entrada da plataforma</h1>
+        <p class="small">Escolha um tipo de acesso para seguir para a área correta.</p>
+        <div class="grid">
+          <button id="studentBtn">Entrar como Usuário (demo)</button>
+          <button id="adminBtn">Entrar como Admin (demo)</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="shared/app.js"></script>
+    <script>
+      const student = App.Seed.users.find((u) => u.role === "student");
+      const admin = App.Seed.users.find((u) => u.role === "admin");
+      document.getElementById("studentBtn").onclick = () => {
+        App.setUser(student);
+        window.location.href = "student/home.html";
+      };
+      document.getElementById("adminBtn").onclick = () => {
+        App.setUser(admin);
+        window.location.href = "admin/home.html";
+      };
+    </script>
+  </body>
+</html>
