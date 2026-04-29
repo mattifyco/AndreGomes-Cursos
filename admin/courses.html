@@ -1,9 +1,203 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Admin • Cursos</title><link rel="stylesheet" href="../shared/styles.css"/></head><body>
-<header class="topbar"><p class="brand">Admin • Tabela de cursos</p><div class="row"><small id="userLabel"></small><button id="logout">Sair</button></div></header>
-<div class="wrap"><aside class="sidebar"><a href="home.html">Home</a><a class="active" href="courses.html">Tabela de cursos</a><a href="students.html">Análise de alunos</a><a href="questions.html">Tabela de dúvidas</a><a href="reviews.html">Antes/Depois</a><a href="lives.html">Agenda de lives</a></aside>
-<main class="content"><section class="card"><h1>Cursos e estrutura</h1><table><thead><tr><th>Curso</th><th>Módulos</th><th>Total de aulas</th><th>Alunos inscritos</th></tr></thead><tbody id="rows"></tbody></table></section></main></div>
-<script src="../shared/app.js"></script><script>
-const user=App.requireAuth('admin'); if(user){document.getElementById('userLabel').textContent=user.name;}
-document.getElementById('rows').innerHTML=App.Seed.courses.map(c=>`<tr><td>${c.title}</td><td>${c.modules.length}</td><td>${c.modules.reduce((a,m)=>a+m.lessons.length,0)}</td><td>${c.students.length}</td></tr>`).join('');
-document.getElementById('logout').onclick=()=>{App.logout();location.href='../index.html';};
-</script></body></html
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin • Cursos</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <p class="brand">Admin • Tabela de cursos</p>
+      <div class="row">
+        <small id="userLabel"></small>
+        <button id="logout">Sair</button>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <aside class="sidebar">
+        <a href="home.html">Home</a>
+        <a class="active" href="courses.html">Tabela de cursos</a>
+        <a href="students.html">Análise de alunos</a>
+        <a href="questions.html">Tabela de dúvidas</a>
+        <a href="reviews.html">Antes/Depois</a>
+        <a href="lives.html">Agenda de lives</a>
+      </aside>
+
+      <main class="content">
+        <section class="card">
+          <h1>Cursos e estrutura</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Curso</th>
+                <th>Módulos</th>
+                <th>Total de aulas</th>
+                <th>Alunos inscritos</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Upload de aula (texto ou vídeo)</h2>
+          <p class="small">Agora o admin consegue cadastrar aulas com conteúdo em texto e também link de vídeo.</p>
+
+          <div class="grid">
+            <label>
+              Curso
+              <select id="courseSelect"></select>
+            </label>
+
+            <label>
+              Módulo
+              <select id="moduleSelect"></select>
+            </label>
+
+            <label>
+              Tipo da aula
+              <select id="lessonType">
+                <option value="text">Texto</option>
+                <option value="video">Vídeo</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="grid" style="margin-top: 0.8rem">
+            <label>
+              Título da aula
+              <input id="lessonTitle" placeholder="Ex: Degradê profissional com low fade" />
+            </label>
+
+            <label id="textContentWrap">
+              Conteúdo em texto
+              <textarea id="lessonText" rows="4" placeholder="Descreva a técnica, materiais e passos..."></textarea>
+            </label>
+
+            <label id="videoContentWrap" style="display: none">
+              URL do vídeo
+              <input id="lessonVideo" placeholder="https://..." />
+            </label>
+          </div>
+
+          <div class="row" style="margin-top: 0.8rem">
+            <button id="saveLesson">Salvar aula</button>
+            <small id="saveFeedback" class="small"></small>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../shared/app.js"></script>
+    <script>
+      const user = App.requireAuth("admin");
+      if (user) {
+        document.getElementById("userLabel").textContent = user.name;
+      }
+
+      const rowsEl = document.getElementById("rows");
+      const courseSelect = document.getElementById("courseSelect");
+      const moduleSelect = document.getElementById("moduleSelect");
+      const lessonType = document.getElementById("lessonType");
+      const lessonTitle = document.getElementById("lessonTitle");
+      const lessonText = document.getElementById("lessonText");
+      const lessonVideo = document.getElementById("lessonVideo");
+      const textWrap = document.getElementById("textContentWrap");
+      const videoWrap = document.getElementById("videoContentWrap");
+      const saveFeedback = document.getElementById("saveFeedback");
+
+      function getStateCourses() {
+        return App.getCourses();
+      }
+
+      function renderTable() {
+        const courses = getStateCourses();
+        rowsEl.innerHTML = courses
+          .map(
+            (c) =>
+              `<tr><td>${c.title}</td><td>${c.modules.length}</td><td>${c.modules.reduce((a, m) => a + m.lessons.length, 0)}</td><td>${c.students.length}</td></tr>`
+          )
+          .join("");
+      }
+
+      function renderCourseAndModules() {
+        const courses = getStateCourses();
+        courseSelect.innerHTML = courses.map((c) => `<option value="${c.id}">${c.title}</option>`).join("");
+        renderModules();
+      }
+
+      function renderModules() {
+        const courses = getStateCourses();
+        const selectedCourse = courses.find((c) => c.id === courseSelect.value) || courses[0];
+        if (!selectedCourse) return;
+        moduleSelect.innerHTML = selectedCourse.modules.map((m) => `<option value="${m.id}">${m.title}</option>`).join("");
+      }
+
+      function toggleTypeFields() {
+        const isText = lessonType.value === "text";
+        textWrap.style.display = isText ? "block" : "none";
+        videoWrap.style.display = isText ? "none" : "block";
+      }
+
+      function saveLesson() {
+        const title = lessonTitle.value.trim();
+        if (!title) {
+          saveFeedback.textContent = "Informe o título da aula.";
+          return;
+        }
+
+        const type = lessonType.value;
+        const text = lessonText.value.trim();
+        const videoUrl = lessonVideo.value.trim();
+
+        if (type === "text" && !text) {
+          saveFeedback.textContent = "No tipo texto, preencha o conteúdo.";
+          return;
+        }
+
+        if (type === "video" && !videoUrl) {
+          saveFeedback.textContent = "No tipo vídeo, informe a URL.";
+          return;
+        }
+
+        const courses = getStateCourses();
+        const course = courses.find((c) => c.id === courseSelect.value);
+        const module = course?.modules.find((m) => m.id === moduleSelect.value);
+        if (!course || !module) {
+          saveFeedback.textContent = "Curso/módulo inválido.";
+          return;
+        }
+
+        module.lessons.push({
+          id: `l_${Date.now()}`,
+          title,
+          type,
+          text: type === "text" ? text : "",
+          videoUrl: type === "video" ? videoUrl : ""
+        });
+
+        App.setCourses(courses);
+        renderTable();
+
+        lessonTitle.value = "";
+        lessonText.value = "";
+        lessonVideo.value = "";
+        saveFeedback.textContent = "Aula salva com sucesso.";
+      }
+
+      courseSelect.addEventListener("change", renderModules);
+      lessonType.addEventListener("change", toggleTypeFields);
+      document.getElementById("saveLesson").addEventListener("click", saveLesson);
+      document.getElementById("logout").onclick = () => {
+        App.logout();
+        location.href = "../index.html";
+      };
+
+      renderTable();
+      renderCourseAndModules();
+      toggleTypeFields();
+    </script>
+  </body>
+</html>
