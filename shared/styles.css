@@ -30,7 +30,6 @@ body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:
     linear-gradient(rgba(7, 7, 10, 0.88), rgba(12, 10, 18, 0.92)),
-    var(--street-photo-main) center / cover fixed no-repeat,
     radial-gradient(circle at 12% 8%, rgba(57, 255, 20, 0.09), transparent 32%),
     radial-gradient(circle at 88% 16%, rgba(176, 38, 255, 0.12), transparent 36%),
     radial-gradient(circle at 50% 130%, rgba(0, 217, 255, 0.08), transparent 40%),
@@ -53,21 +52,6 @@ body::before {
 
 
 
-body::after {
-  content: "";
-  position: fixed;
-  top: 75px;
-  right: 0;
-  width: min(34vw, 420px);
-  height: calc(100vh - 75px);
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(7, 7, 10, 0), rgba(7, 7, 10, 0.78) 20%, rgba(7, 7, 10, 0.94)),
-    var(--street-photo-side) center / cover no-repeat;
-  opacity: 0.23;
-  mix-blend-mode: screen;
-  z-index: -1;
-}
 h1,
 h2,
 h3,
@@ -109,6 +93,50 @@ a:hover {
   text-shadow: 0 0 12px rgba(57, 255, 20, 0.35);
 }
 
+
+.topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(57, 255, 20, 0.55), rgba(0, 217, 255, 0.55), transparent);
+}
+
+.content > .card:first-child {
+  overflow: hidden;
+}
+
+.content > .card:first-child::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(140deg, rgba(8, 8, 12, 0.76), rgba(8, 8, 12, 0.9)),
+    var(--street-photo-main) center / cover no-repeat;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+h1, h2 {
+  text-shadow: 0 0 12px rgba(176, 38, 255, 0.25), 0 0 20px rgba(0, 217, 255, 0.12);
+}
+
+table {
+  background: rgba(8, 8, 12, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 12px 24px rgba(0,0,0,0.3);
+}
+
+th {
+  background: linear-gradient(180deg, #1f2030, #171825);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+tr:hover td {
+  background: rgba(21, 22, 33, 0.8);
+}
 .wrap {
   display: grid;
   grid-template-columns: 270px 1fr;
@@ -117,10 +145,7 @@ a:hover {
 
 .sidebar {
   border-right: 1px solid var(--border);
-  background:
-    linear-gradient(180deg, rgba(15, 15, 21, 0.92), rgba(10, 10, 15, 0.96)),
-    var(--street-photo-side) center / cover no-repeat;
-  background-blend-mode: normal, luminosity;
+  background: linear-gradient(180deg, rgba(15, 15, 21, 0.95), rgba(10, 10, 15, 0.98));
   padding: 1rem;
 }
 
@@ -150,10 +175,7 @@ a:hover {
 
 .card {
   position: relative;
-  background:
-    linear-gradient(160deg, rgba(20, 20, 27, 0.86), rgba(10, 10, 14, 0.92)),
-    var(--street-photo-main) center / cover no-repeat;
-  background-blend-mode: normal, soft-light;
+  background: linear-gradient(160deg, rgba(20, 20, 27, 0.9), rgba(10, 10, 14, 0.94));
   border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1rem;
@@ -320,9 +342,6 @@ td {
     grid-template-columns: 1fr;
   }
 
-  body::after {
-    display: none;
-  }
 
   .sidebar {
     border-right: 0;
